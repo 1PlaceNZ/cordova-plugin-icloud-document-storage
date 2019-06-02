@@ -99,6 +99,156 @@
         }
     }
     
+     @objc(base64:)
+    func base64(command: CDVInvokedUrlCommand) {
+        do {
+            self.ubiquitousContainerID  = "";
+            if (self.ubiquitousContainerURL == nil) {
+                self.ubiquitousContainerURL = self.getUbiquitousContainerURL(self.ubiquitousContainerID)
+            }
+            
+            let filePath = command.arguments[0] as? String;
+            let fileURL = URL.init(string: filePath!)
+            let fileManager = FileManager.default;
+            
+            if fileManager.fileExists(atPath: (fileURL!.path)) {
+                let fileData = try Data.init(contentsOf: fileURL!)
+                let fileStream:String = fileData.base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0));
+                
+                self.commandDelegate!.send(
+                    CDVPluginResult(
+                        status: CDVCommandStatus_OK,
+                        messageAs: fileStream
+                    ),
+                    callbackId: command.callbackId
+                )
+            } else {
+                self.commandDelegate!.send(
+                    CDVPluginResult(
+                        status: CDVCommandStatus_ERROR,
+                        messageAs: fileURL?.absoluteString
+                    ),
+                    callbackId: command.callbackId
+                )
+            }
+        } catch {
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_ERROR,
+                    messageAs: error.localizedDescription
+                ),
+                callbackId: command.callbackId
+            )
+        }
+    }
+    
+    @objc(removeiCloudFile:)
+    func removeiCloudFile(command: CDVInvokedUrlCommand) {
+        
+        self.ubiquitousContainerID  = "";
+        if (self.ubiquitousContainerURL == nil) {
+            self.ubiquitousContainerURL = self.getUbiquitousContainerURL(self.ubiquitousContainerID)
+        }
+        
+        let filePath = command.arguments[0] as? String;
+        let fileURL = URL.init(string: filePath!)
+        let fileManager = FileManager.default;
+        
+        if fileManager.fileExists(atPath: (fileURL!.path)) {
+            do {
+               try fileManager.removeItem(at: fileURL!);
+            } catch let error as NSError {
+                NSLog("Unable to remove directory \(error.debugDescription)")
+            }
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: "OK"
+                ),
+                callbackId: command.callbackId
+            )
+        } else {
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_ERROR,
+                    messageAs: fileURL?.absoluteString
+                ),
+                callbackId: command.callbackId
+            )
+        }
+    }
+    
+    @objc(fileList:)
+    func fileList(command: CDVInvokedUrlCommand) {
+        do {
+            self.ubiquitousContainerID  = "";
+            if (self.ubiquitousContainerURL == nil) {
+                self.ubiquitousContainerURL = self.getUbiquitousContainerURL(self.ubiquitousContainerID)
+            }
+            
+            let folder = command.arguments[0] as? String;
+            let fileUrlInUbiquitousContainer = self.ubiquitousContainerURL?
+                .appendingPathComponent("Documents")
+                .appendingPathComponent(folder!);
+            let fileManager = FileManager.default;
+            
+            do {
+                try fileManager.createDirectory(atPath: fileUrlInUbiquitousContainer!.path, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                NSLog("Unable to create directory \(error.debugDescription)")
+            }
+            let files = try? FileManager.default.contentsOfDirectory(at: (fileUrlInUbiquitousContainer?.absoluteURL)!,
+                                                                     includingPropertiesForKeys: [.contentModificationDateKey],
+                                                                    options:.skipsHiddenFiles);
+            // Sort Files
+            var urls: [URL] = [];
+            for file in files!
+            {
+                urls.append(file);
+            }
+            let arrayFiles = urls.map { url in
+                (url.lastPathComponent, (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast)
+                }
+                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .map { $0.0 } // extract file names
+            
+            // Return data in Base64
+            var data: [[String: String]] = [];
+            for fileName in arrayFiles
+            {
+                let url = fileUrlInUbiquitousContainer?.appendingPathComponent(fileName);
+                let fileData = try Data.init(contentsOf: url!)
+                let fileStream:String = fileData.base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0));
+                let info:[String: String] = [(url?.absoluteString)!: fileStream];
+                data.append(info);
+            }
+            
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: data
+                ),
+                callbackId: command.callbackId
+            )
+
+            
+            
+        } catch {
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_ERROR,
+                    messageAs: error.localizedDescription
+                ),
+                callbackId: command.callbackId
+            )
+        }
+        
+        
+        
+    }
+    
+    
+    
     
     // getUbiquitousContainerURL: Initialises the ubiquitous container at the given container ID (or default if nil) and returns it's local URL.
     private func getUbiquitousContainerURL(_ containerId: String?) -> URL {
