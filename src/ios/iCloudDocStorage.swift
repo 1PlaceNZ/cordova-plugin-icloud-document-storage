@@ -248,6 +248,55 @@
         
     }
     
+    @objc(downloadFile:)
+    func downloadFile(command: CDVInvokedUrlCommand) {
+        // Get the file to sync's url
+        let fileURLArg = command.arguments[0] as? String
+        
+        if (fileURLArg != nil) {
+            NSLog(fileURLArg!)
+            
+            // Convert fileUrl to URL
+            let fileURL = URL.init(string: fileURLArg!)
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                // Initialise and store the ubiquitous container url if necessary
+                if (self.ubiquitousContainerURL == nil) {
+                    self.ubiquitousContainerURL = self.getUbiquitousContainerURL(self.ubiquitousContainerID)
+                }
+                
+                do {
+                    try FileManager.default.startDownloadingUbiquitousItem(at: fileURL!)
+                    
+                    NSLog("Downloading file \(fileURL)")
+
+                    self.pluginResult = CDVPluginResult(
+                        status: CDVCommandStatus_OK
+                    )
+                }
+                catch {
+                    NSLog("Error Downloading file \(fileURL)")
+                    self.pluginResult = CDVPluginResult(
+                        status: CDVCommandStatus_ERROR
+                    )
+                }
+                
+                self.commandDelegate!.send(
+                    self.pluginResult,
+                    callbackId: command.callbackId
+                )
+            }
+        }
+        else {
+            self.commandDelegate!.send(
+                CDVPluginResult(
+                    status: CDVCommandStatus_OK
+                ),
+                callbackId: command.callbackId
+            )
+        }
+    }
+    
     
     
     
