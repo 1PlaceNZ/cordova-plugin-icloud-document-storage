@@ -26,7 +26,8 @@
                 NSLog((self.ubiquitousContainerURL?.absoluteString)!)
                 
                 self.pluginResult = CDVPluginResult(
-                    status: CDVCommandStatus_OK
+                    status: CDVCommandStatus_OK,
+                    messageAs: self.ubiquitousContainerURL?.absoluteString
                 )
             }
             else {
