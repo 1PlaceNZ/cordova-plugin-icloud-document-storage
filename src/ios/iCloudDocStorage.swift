@@ -297,11 +297,13 @@
         }
     }
     
-    
-    
-    
-    // getUbiquitousContainerURL: Initialises the ubiquitous container at the given container ID (or default if nil) and returns it's local URL.
-    private func getUbiquitousContainerURL(_ containerId: String?) -> URL {
-        return FileManager.default.url(forUbiquityContainerIdentifier: containerId)!
+    private func getUbiquitousContainerURL(_ containerId: String?) -> URL? {
+        if let iCloudContainerUrl = FileManager.default.url(forUbiquityContainerIdentifier: containerId) {
+            NSLog("iCloud is on")
+            return iCloudContainerUrl
+        }   else {
+            NSLog("iCloud is off")
+            return nil
+        }
     }
 }
