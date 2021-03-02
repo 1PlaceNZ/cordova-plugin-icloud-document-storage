@@ -10,3 +10,7 @@ iCloudDocStorage.initUbiquitousContainer = function(containerId, success, error)
 iCloudDocStorage.syncToCloud = function(fileUrl, success, error) {
   exec(success, error, "iCloudDocStorage", "syncToCloud", [fileUrl]);
 };
+
+iCloudDocStorage.removeFile = function(fileName, success, error) {
+  exec(success, error, "iCloudDocStorage", "removeiCloudFile", [fileName]);
+};
