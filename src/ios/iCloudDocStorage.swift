@@ -152,8 +152,24 @@
         }
         
         let filePath = command.arguments[0] as? String;
-        let fileURL = URL.init(string: filePath!)
+        var fileURL = URL.init(string: filePath!)
         let fileManager = FileManager.default;
+        if (filePath?.hasPrefix("file://") == false) {
+            let fileUrlInUbiquitousContainer = self.ubiquitousContainerURL?
+                        .appendingPathComponent("Documents")
+
+            let files = try? FileManager.default.contentsOfDirectory(at: (fileUrlInUbiquitousContainer?.absoluteURL)!,
+                                                                     includingPropertiesForKeys: [.contentModificationDateKey],
+                                                                    options:.skipsHiddenFiles);
+            for file in files!
+            {
+                // NSLog(file.absoluteString)
+                if (file.lastPathComponent == filePath) {
+                    fileURL = file;
+                    break;
+                }
+            }
+        }
         
         if fileManager.fileExists(atPath: (fileURL!.path)) {
             do {
