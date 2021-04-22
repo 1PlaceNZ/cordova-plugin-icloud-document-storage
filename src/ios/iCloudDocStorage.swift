@@ -66,29 +66,34 @@
                 let fileUrlInUbiquitousContainer = self.ubiquitousContainerURL?
                     .appendingPathComponent("Documents")
                     .appendingPathComponent((fileURL?.lastPathComponent)!)
-                
-                do {
-                    // Tell iOS to move the file to the ubiquitous container and sync to iCloud
-                    try FileManager.default.setUbiquitous(
-                        true,
-                        itemAt: fileURL!,
-                        destinationURL: fileUrlInUbiquitousContainer!)
-                    
-                    self.pluginResult = CDVPluginResult(
-                        status: CDVCommandStatus_OK
-                    )
-                }
-                catch {
+                if (fileUrlInUbiquitousContainer == nil) {
                     self.pluginResult = CDVPluginResult(
                         status: CDVCommandStatus_ERROR
                     )
+                } else {
+                    do {
+                        // Tell iOS to move the file to the ubiquitous container and sync to iCloud
+                        try FileManager.default.setUbiquitous(
+                            true,
+                            itemAt: fileURL!,
+                            destinationURL: fileUrlInUbiquitousContainer!)
+
+                        self.pluginResult = CDVPluginResult(
+                            status: CDVCommandStatus_OK
+                        )
+                    }
+                    catch {
+                        self.pluginResult = CDVPluginResult(
+                            status: CDVCommandStatus_ERROR
+                        )
+                    }
+
+                    self.commandDelegate!.send(
+                        self.pluginResult,
+                        callbackId: command.callbackId
+                    )
                 }
-                
-                self.commandDelegate!.send(
-                    self.pluginResult,
-                    callbackId: command.callbackId
-                )
-            }
+            }     
         }
         else {
             self.commandDelegate!.send(
