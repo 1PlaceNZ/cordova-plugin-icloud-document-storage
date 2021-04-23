@@ -67,8 +67,12 @@
                     .appendingPathComponent("Documents")
                     .appendingPathComponent((fileURL?.lastPathComponent)!)
                 if (fileUrlInUbiquitousContainer == nil) {
-                    self.pluginResult = CDVPluginResult(
-                        status: CDVCommandStatus_ERROR
+                    self.commandDelegate!.send(
+                        CDVPluginResult(
+                            status: CDVCommandStatus_ERROR,
+                            messageAs: "iCloud is off"
+                        ),
+                        callbackId: command.callbackId
                     )
                 } else {
                     do {
