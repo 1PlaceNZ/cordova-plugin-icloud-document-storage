@@ -26,10 +26,36 @@
                 <param name="ios-package" value="iCloudDocStorage"/>
             </feature>
         </config-file>
+
+
+        <preference name="CONTAINER_NAME" default="default-value" />
+
+        <config-file target="*-Info.plist" parent="UIFileSharingEnabled">
+            <true/>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="LSSupportsOpeningDocumentsInPlace">
+            <true/>
+        </config-file>
+        
+        <config-file target="*-Info.plist" parent="NSUbiquitousContainers">
+             <dict>
+              <key>iCloud.$CONTAINER_NAME</key>
+              <dict>
+                <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+                <true/>
+                <key>NSUbiquitousContainerName</key>
+                <string>$CONTAINER_NAME</string>
+                <key>NSUbiquitousContainerSupportedFolderLevels</key>
+                <string>any</string>
+              </dict>
+            </dict>
+        </config-file>
         
         <header-file src="src/ios/iCloudDocStorage-Bridging-Header.h"/>
         <source-file src="src/ios/iCloudDocStorage.swift" />
 
         <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+         <hook type="after_plugin_install" src="src/ios/hooks/install_entitlements.js"/>
     </platform>
 </plugin>
