@@ -4,6 +4,15 @@ console.error("Running hook to add iCloud entitlements");
 var fs = require('fs'),
     path = require('path');
 
+    var getPreferenceValue = function(config, name) {
+      var value = config.match(new RegExp('name="' + name + '" value="(.*?)"', "i"))
+      if(value && value[1]) {
+          return value[1]
+      } else {
+          return null
+      }
+  }
+
 module.exports = function (context) {
   var xcode = require('xcode');
   var Q = require('q');
@@ -44,6 +53,16 @@ module.exports = function (context) {
     } else {
       var sourceFile = path.join(context.opts.plugin.pluginInfo.dir, 'src/ios/resources/iCloud.entitlements');
       fs.readFile(sourceFile, 'utf8', function (err, data) {
+
+        if(process.argv.join("|").indexOf("CONTAINER_NAME=") > -1) {
+          var CONTAINER_NAME = process.argv.join("|").match(/CONTAINER_NAME=(.*?)(\||$)/)[1]
+        } else {
+          var config = fs.readFileSync("config.xml").toString()
+          var CONTAINER_NAME = getPreferenceValue(config, "CONTAINER_NAME")
+        }
+        data.replace(/CONTAINER_NAME/g, CONTAINER_NAME)
+
+
         var resourcesFolderPath = path.join(iosFolder, projName, 'Resources');
         fs.existsSync(resourcesFolderPath) || fs.mkdirSync(resourcesFolderPath);
         fs.writeFileSync(destFile, data);
