@@ -34,5 +34,6 @@
   "bugs": {
     "url": "https://github.com/nero120/cordova-plugin-icloud-document-storage/issues"
   },
-  "homepage": "https://github.com/nero120/cordova-plugin-icloud-document-storage"
+  "homepage": "https://github.com/nero120/cordova-plugin-icloud-document-storage",
+  "devDependencies": {}
 }
