@@ -293,14 +293,14 @@
                 do {
                     try FileManager.default.startDownloadingUbiquitousItem(at: fileURL!)
                     
-                    NSLog("Downloading file \(fileURL)")
+                    NSLog("Downloading file \(String(describing: fileURL))")
 
                     self.pluginResult = CDVPluginResult(
                         status: CDVCommandStatus_OK
                     )
                 }
                 catch {
-                    NSLog("Error Downloading file \(fileURL)")
+                    NSLog("Error Downloading file \(String(describing: fileURL))")
                     self.pluginResult = CDVPluginResult(
                         status: CDVCommandStatus_ERROR
                     )
