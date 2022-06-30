@@ -55,6 +55,39 @@
         <source-file src="src/ios/iCloudDocStorage.swift" />
 
         <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+        <config-file target="*-Debug.plist" parent="com.apple.developer.icloud-container-identifiers">
+            <array>
+                <string>iCloud.$CONTAINER_NAME</string>
+            </array>
+        </config-file>
+
+        <config-file target="*-Release.plist" parent="com.apple.developer.icloud-container-identifiers">
+            <array>
+                <string>iCloud.$CONTAINER_NAME</string>
+            </array>
+        </config-file>
+        <config-file target="*-Debug.plist" parent="com.apple.developer.icloud-services">
+            <array>
+                <string>CloudDocuments</string>
+            </array>
+        </config-file>
+
+        <config-file target="*-Release.plist" parent="com.apple.developer.icloud-services">
+            <array>
+                <string>CloudDocuments</string>
+            </array>
+        </config-file>
+        <config-file target="*-Debug.plist" parent="com.apple.developer.ubiquity-container-identifiers">
+            <array>
+                 <string>iCloud.$CONTAINER_NAME</string>
+            </array>
+        </config-file>
+
+        <config-file target="*-Release.plist" parent="com.apple.developer.ubiquity-container-identifiers">
+            <array>
+                 <string>iCloud.$CONTAINER_NAME</string>
+            </array>
+        </config-file>
         
     </platform>
 </plugin>
