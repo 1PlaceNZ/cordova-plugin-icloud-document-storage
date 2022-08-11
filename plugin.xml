@@ -29,6 +29,7 @@
 
 
         <preference name="CONTAINER_NAME" default="default-value" />
+        <preference name="CONTAINER_NAME_LABEL" default="default-value" />
 
         <config-file target="*-Info.plist" parent="UIFileSharingEnabled">
             <true/>
@@ -45,7 +46,7 @@
                 <key>NSUbiquitousContainerIsDocumentScopePublic</key>
                 <true/>
                 <key>NSUbiquitousContainerName</key>
-                <string>$CONTAINER_NAME</string>
+                <string>$CONTAINER_NAME_LABEL</string>
                 <key>NSUbiquitousContainerSupportedFolderLevels</key>
                 <string>any</string>
               </dict>
