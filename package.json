@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-icloud-document-storage",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cordova iCloud Document Storage Plugin",
   "cordova": {
     "id": "cordova-plugin-icloud-document-storage",
