@@ -93,7 +93,7 @@
                     }
 
                     self.commandDelegate!.send(
-                        self.pluginResult,
+                        self.pluginResult ?? CDVPluginResult(status: CDVCommandStatus.error),
                         callbackId: command.callbackId
                     )
                 }
@@ -307,7 +307,7 @@
                 }
                 
                 self.commandDelegate!.send(
-                    self.pluginResult,
+                    self.pluginResult ?? CDVPluginResult(status: CDVCommandStatus.error),
                     callbackId: command.callbackId
                 )
             }
