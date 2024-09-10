@@ -12,7 +12,7 @@
         if (FileManager.default.ubiquityIdentityToken == nil) {
             return self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_ERROR
+                    status: CDVCommandStatus.error
                 ),
                 callbackId: command.callbackId
             )
@@ -26,18 +26,18 @@
                 NSLog((self.ubiquitousContainerURL?.absoluteString)!)
                 
                 self.pluginResult = CDVPluginResult(
-                    status: CDVCommandStatus_OK,
-                    messageAs: self.ubiquitousContainerURL?.absoluteString
+                    status: CDVCommandStatus.ok,
+                    messageAs: self.ubiquitousContainerURL?.absoluteString ?? ""
                 )
             }
             else {
                 self.pluginResult = CDVPluginResult(
-                    status: CDVCommandStatus_ERROR
+                    status: CDVCommandStatus.error
                 )
             }
             
             self.commandDelegate!.send(
-                self.pluginResult,
+                self.pluginResult ?? CDVPluginResult(status: CDVCommandStatus.error),
                 callbackId: command.callbackId
             )
         }
@@ -69,7 +69,7 @@
                 if (fileUrlInUbiquitousContainer == nil) {
                     self.commandDelegate!.send(
                         CDVPluginResult(
-                            status: CDVCommandStatus_ERROR,
+                            status: CDVCommandStatus.error,
                             messageAs: "iCloud is off"
                         ),
                         callbackId: command.callbackId
@@ -83,17 +83,17 @@
                             destinationURL: fileUrlInUbiquitousContainer!)
 
                         self.pluginResult = CDVPluginResult(
-                            status: CDVCommandStatus_OK
+                            status: CDVCommandStatus.ok
                         )
                     }
                     catch {
                         self.pluginResult = CDVPluginResult(
-                            status: CDVCommandStatus_ERROR
+                            status: CDVCommandStatus.error
                         )
                     }
 
                     self.commandDelegate!.send(
-                        self.pluginResult,
+                        self.pluginResult ?? CDVPluginResult(status: CDVCommandStatus.error),
                         callbackId: command.callbackId
                     )
                 }
@@ -102,7 +102,7 @@
         else {
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_OK
+                    status: CDVCommandStatus.ok
                 ),
                 callbackId: command.callbackId
             )
@@ -127,7 +127,7 @@
                 
                 self.commandDelegate!.send(
                     CDVPluginResult(
-                        status: CDVCommandStatus_OK,
+                        status: CDVCommandStatus.ok,
                         messageAs: fileStream
                     ),
                     callbackId: command.callbackId
@@ -135,8 +135,8 @@
             } else {
                 self.commandDelegate!.send(
                     CDVPluginResult(
-                        status: CDVCommandStatus_ERROR,
-                        messageAs: fileURL?.absoluteString
+                        status: CDVCommandStatus.error,
+                        messageAs: fileURL?.absoluteString ?? ""
                     ),
                     callbackId: command.callbackId
                 )
@@ -144,7 +144,7 @@
         } catch {
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_ERROR,
+                    status: CDVCommandStatus.error,
                     messageAs: error.localizedDescription
                 ),
                 callbackId: command.callbackId
@@ -188,7 +188,7 @@
             }
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_OK,
+                    status: CDVCommandStatus.ok,
                     messageAs: "OK"
                 ),
                 callbackId: command.callbackId
@@ -196,8 +196,8 @@
         } else {
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_ERROR,
-                    messageAs: fileURL?.absoluteString
+                    status: CDVCommandStatus.error,
+                    messageAs: fileURL?.absoluteString ?? ""
                 ),
                 callbackId: command.callbackId
             )
@@ -251,7 +251,7 @@
             
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_OK,
+                    status: CDVCommandStatus.ok,
                     messageAs: data
                 ),
                 callbackId: command.callbackId
@@ -262,7 +262,7 @@
         } catch {
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_ERROR,
+                    status: CDVCommandStatus.error,
                     messageAs: error.localizedDescription
                 ),
                 callbackId: command.callbackId
@@ -296,18 +296,18 @@
                     NSLog("Downloading file \(String(describing: fileURL))")
 
                     self.pluginResult = CDVPluginResult(
-                        status: CDVCommandStatus_OK
+                        status: CDVCommandStatus.ok
                     )
                 }
                 catch {
                     NSLog("Error Downloading file \(String(describing: fileURL))")
                     self.pluginResult = CDVPluginResult(
-                        status: CDVCommandStatus_ERROR
+                        status: CDVCommandStatus.error
                     )
                 }
                 
                 self.commandDelegate!.send(
-                    self.pluginResult,
+                    self.pluginResult ?? CDVPluginResult(status: CDVCommandStatus.error),
                     callbackId: command.callbackId
                 )
             }
@@ -315,7 +315,7 @@
         else {
             self.commandDelegate!.send(
                 CDVPluginResult(
-                    status: CDVCommandStatus_OK
+                    status: CDVCommandStatus.ok
                 ),
                 callbackId: command.callbackId
             )

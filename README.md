@@ -10,6 +10,9 @@ modified for cordova 8.0.0
 
 ## Changes
 
+### 0.0.3 
+Fixed error and deprecated api usage in iCloudDocStorage.swift for Swift 4 compatiblility
+
 ### 0.0.2 
 added variable for container name and container label
 
